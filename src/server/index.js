@@ -49,9 +49,19 @@ mongo.connect(url, (err, client) => {
 
 app.use(express.static(path.resolve(__dirname, "../../bin/client")));
 
-app.get("/hello", (req, res) => {
+app.get("/api/banks", (req, res) => {
     console.log(`ℹ️  (${req.method.toUpperCase()}) ${req.url}`);
-    res.send("Hello, World!");
+
+    res.json({
+        data: [],
+    });
+});
+
+app.get("/api/terminals", (req, res) => {
+    console.log(`ℹ️  (${req.method.toUpperCase()}) ${req.url}`);
+    res.json({
+        data: [],
+    });
 });
 
 app.listen(APP_PORT, () =>
