@@ -15,6 +15,7 @@ const app = express();
 
 // MONGODB
 const mongo = require("mongodb").MongoClient;
+//assert sert a stopper la fonction en cas d'erreur.
 const assert = require("assert");
 
 const url = "mongodb://dev:dev@mongo:27017";
