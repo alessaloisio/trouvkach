@@ -21,38 +21,54 @@ const assert = require("assert");
 const url = "mongodb://dev:dev@mongo:27017";
 const dbName = "trouvkash";
 
-mongo.connect(url, (err, client) => {
-    assert.equal(null, err);
-    console.log("Connected successfully to server");
+const getDb = () =>
+    new Promise(resolve => {
+        mongo.connect(url, (err, client) => {
+            //assert -> permet d' arreter la fonction si il y a une erreur
+            assert.equal(null, err);
+            console.log("Connected successfully to server");
 
-    const db = client.db(dbName);
+            resolve(client.db(dbName));
+        });
+    });
+
+app.use(express.static(path.resolve(__dirname, "../../bin/client")));
+
+app.get("/hello", (req, res) => {
+    console.log(`ℹ️  (${req.method.toUpperCase()}) ${req}`);
+    res.send("coucou les amis");
+});
+
+app.get("/api/banks", async (req, res) => {
+    console.log(`ℹ️  (${req.method.toUpperCase()}) ${req.url}`);
+
+    const db = await getDb();
 
     // Banks
     const Banks = db.collection("banks");
     // eslint-disable-next-line no-shadow
     Banks.find({}).toArray((err, docs) => {
         assert.equal(null, err);
-        console.log("Found the following records");
-        console.log(docs);
+        res.send({
+            data: docs,
+        });
     });
+});
+
+app.get("/api/terminals", async (req, res) => {
+    console.log(`ℹ️  (${req.method.toUpperCase()}) ${req.url}`);
+
+    const db = await getDb();
 
     // Terminals
     const Terminals = db.collection("terminals");
     // eslint-disable-next-line no-shadow
     Terminals.find({}).toArray((err, docs) => {
         assert.equal(null, err);
-        console.log("Found the following records");
-        console.log(docs);
+        res.json({
+            data: docs,
+        });
     });
-
-    // client.close();
-});
-
-app.use(express.static(path.resolve(__dirname, "../../bin/client")));
-
-app.get("/hello", (req, res) => {
-    console.log(`ℹ️  (${req.method.toUpperCase()}) ${req.url}`);
-    res.send("Hello, World!");
 });
 
 app.listen(APP_PORT, () =>
