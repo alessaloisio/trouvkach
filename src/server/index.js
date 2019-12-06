@@ -55,19 +55,45 @@ app.get("/api/banks", async (req, res) => {
     });
 });
 
-app.get("/api/terminals", async (req, res) => {
+app.get("/api/terminals/:longitude-:latitude", async (req, res) => {
     console.log(`ℹ️  (${req.method.toUpperCase()}) ${req.url}`);
 
     const db = await getDb();
+    const longitude = parseFloat(req.params.longitude);
+    const latitude = parseFloat(req.params.latitude);
 
     // Terminals
     const Terminals = db.collection("terminals");
     // eslint-disable-next-line no-shadow
-    Terminals.find({}).toArray((err, docs) => {
-        assert.equal(null, err);
-        res.json({
-            data: docs,
-        });
+    const terminals = await Terminals.aggregate([
+        {
+            $project: {
+                bank: 1,
+                address: 1,
+                distance: {
+                    $sqrt: {
+                        $add: [
+                            {$pow: [{$subtract: ["$longitude", longitude]}, 2]},
+                            {$pow: [{$subtract: ["$latitude", latitude]}, 2]},
+                        ],
+                    },
+                },
+            },
+        },
+        {
+            $match: {
+                distance: {$lte: 50},
+            },
+        },
+    ])
+        .sort({
+            distance: 1,
+        })
+        .toArray();
+
+    // Send to client
+    res.json({
+        data: terminals,
     });
 });
 
