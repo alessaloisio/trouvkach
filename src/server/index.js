@@ -71,20 +71,49 @@ app.get("/api/terminals/:longitude-:latitude", async (req, res) => {
                 bank: 1,
                 address: 1,
                 distance: {
-                    $sqrt: {
-                        $add: [
-                            {$pow: [{$subtract: ["$longitude", longitude]}, 2]},
-                            {$pow: [{$subtract: ["$latitude", latitude]}, 2]},
-                        ],
-                    },
+                    $multiply: [
+                        {
+                            $acos: {
+                                $add: [
+                                    {
+                                        $multiply: [
+                                            {$sin: "$latitude"},
+                                            {$sin: latitude},
+                                        ],
+                                    },
+                                    {
+                                        $multiply: [
+                                            {
+                                                $cos: "$latitude",
+                                            },
+                                            {
+                                                $cos: latitude,
+                                            },
+                                            {
+                                                $cos: {
+                                                    $subtract: [
+                                                        longitude,
+                                                        "$longitude",
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        },
+                        {
+                            $multiply: [6371, 1000],
+                        },
+                    ],
                 },
             },
         },
-        {
-            $match: {
-                distance: {$lte: 50},
-            },
-        },
+        // {
+        //     $match: {
+        //         distance: {$lte: 50},
+        //     },
+        // },
     ])
         .sort({
             distance: 1,
