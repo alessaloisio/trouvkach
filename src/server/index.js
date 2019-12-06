@@ -55,65 +55,153 @@ app.get("/api/banks", async (req, res) => {
     });
 });
 
-app.get("/api/terminals/:longitude-:latitude", async (req, res) => {
+app.get("/api/terminals/:latitude,:longitude,:zoom", async (req, res) => {
     console.log(`ℹ️  (${req.method.toUpperCase()}) ${req.url}`);
-
     const db = await getDb();
-    const longitude = parseFloat(req.params.longitude);
-    const latitude = parseFloat(req.params.latitude);
+
+    const longitude = parseFloat(req.params.longitude) || 50.6593305;
+    const latitude = parseFloat(req.params.latitude) || 5.5995275;
+    const zoom = parseFloat(req.params.zoom) || 1;
 
     // Terminals
     const Terminals = db.collection("terminals");
-    // eslint-disable-next-line no-shadow
+
+    // haversine’ formula
+    // https://stackoverflow.com/a/365853
     const terminals = await Terminals.aggregate([
         {
-            $project: {
-                bank: 1,
-                address: 1,
-                distance: {
-                    $multiply: [
+            $addFields: {
+                // dLat
+                dLat: {
+                    $divide: [
                         {
-                            $acos: {
-                                $add: [
-                                    {
-                                        $multiply: [
-                                            {$sin: "$latitude"},
-                                            {$sin: latitude},
-                                        ],
+                            $multiply: [
+                                {
+                                    $subtract: [latitude, "$latitude"],
+                                },
+                                Math.PI,
+                            ],
+                        },
+                        180,
+                    ],
+                },
+
+                // dLon
+                dLon: {
+                    $divide: [
+                        {
+                            $multiply: [
+                                {
+                                    $subtract: [longitude, "$longitude"],
+                                },
+                                Math.PI,
+                            ],
+                        },
+                        180,
+                    ],
+                },
+
+                // lat1
+                lat1: {
+                    $divide: [
+                        {
+                            $multiply: ["$latitude", Math.PI],
+                        },
+                        180,
+                    ],
+                },
+
+                // lat 2
+                lat2: {
+                    $divide: [
+                        {
+                            $multiply: [latitude, Math.PI],
+                        },
+                        180,
+                    ],
+                },
+            },
+        },
+        {
+            $addFields: {
+                a: {
+                    $add: [
+                        {
+                            $multiply: [
+                                {
+                                    $sin: {
+                                        $divide: ["$dLat", 2],
                                     },
-                                    {
-                                        $multiply: [
-                                            {
-                                                $cos: "$latitude",
-                                            },
-                                            {
-                                                $cos: latitude,
-                                            },
-                                            {
-                                                $cos: {
-                                                    $subtract: [
-                                                        longitude,
-                                                        "$longitude",
-                                                    ],
-                                                },
-                                            },
-                                        ],
+                                },
+                                {
+                                    $sin: {
+                                        $divide: ["$dLat", 2],
                                     },
-                                ],
-                            },
+                                },
+                            ],
                         },
                         {
-                            $multiply: [6371, 1000],
+                            $multiply: [
+                                {
+                                    $cos: "$lat1",
+                                },
+                                {
+                                    $cos: "$lat2",
+                                },
+                                {
+                                    $sin: {
+                                        $divide: ["$dLon", 2],
+                                    },
+                                },
+                                {
+                                    $sin: {
+                                        $divide: ["$dLon", 2],
+                                    },
+                                },
+                            ],
                         },
                     ],
                 },
             },
         },
-        // {
-        //     $match: {
-        //         distance: {$lte: 50},
-        //     },
-        // },
+        {
+            $addFields: {
+                c: {
+                    $multiply: [
+                        2,
+                        {
+                            $atan2: [
+                                {
+                                    $sqrt: "$a",
+                                },
+                                {
+                                    $sqrt: {
+                                        $subtract: [1, "$a"],
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+        },
+        {
+            $project: {
+                bank: 1,
+                address: 1,
+                distance: {
+                    $trunc: [
+                        {$divide: [{$multiply: ["$c", 6378137]}, 1000]}, // km
+                        2,
+                    ],
+                },
+            },
+        },
+        {
+            $match: {
+                distance: {$lte: zoom},
+            },
+        },
     ])
         .sort({
             distance: 1,
