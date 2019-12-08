@@ -17,7 +17,7 @@ export default () => {
     // Center map position
     const [position, setPosition] = useState({
         ...userPosition,
-        zoom: 15,
+        zoom: 16,
     });
 
     const [terminals, setterminals] = useState([]);
@@ -110,7 +110,7 @@ export default () => {
         <React.Fragment>
             <Header terminals={terminals} />
             <div className={"content"}>
-                <SideBar />
+                <SideBar terminals={terminals} />
                 {waitPermission ? (
                     <Map
                         userPosition={userPosition}

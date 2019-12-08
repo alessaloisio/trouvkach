@@ -152,6 +152,10 @@ export default async (req, res) => {
         {
             $match: {
                 distance: {$lte: distance},
+                bank: {
+                    $exists: true,
+                    $ne: null,
+                },
             },
         },
     ])
