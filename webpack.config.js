@@ -11,6 +11,7 @@
 const webpack = require("webpack");
 const {resolve} = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = env => {
     const plugins = [
@@ -18,6 +19,10 @@ module.exports = env => {
             NODE_ENV: env === "dev" ? "development" : "production",
             VERSION: require("./package.json").version,
             BUILD_TIME: Date.now(),
+        }),
+        new MiniCssExtractPlugin({
+            path: resolve(__dirname, "./bin/client"),
+            filename: env === "dev" ? "css/bundle.css" : "css/[chunkhash].css",
         }),
         new HtmlWebpackPlugin({
             template: resolve(__dirname, "./src/index.html"),
@@ -100,6 +105,20 @@ module.exports = env => {
                                     ],
                                 ],
                             },
+                        },
+                    ],
+                },
+                {
+                    test: /\.(sa|sc|c)ss$/,
+                    use: [
+                        {
+                            loader: MiniCssExtractPlugin.loader,
+                        },
+                        {
+                            loader: "css-loader",
+                        },
+                        {
+                            loader: "sass-loader",
                         },
                     ],
                 },

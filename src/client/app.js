@@ -8,14 +8,10 @@
 
 import * as React from "react";
 import ReactDOM from "react-dom";
-import Localisation from "./components/geolocalisation";
-import HelloWorld from "./components/hello";
 
-/* ReactDOM.render(<HelloWorld />, document.querySelector("#app")); */
-ReactDOM.render(
-    <div>
-        <Localisation />
-        <HelloWorld />
-    </div>,
-    document.querySelector("#app"),
-);
+import "./scss/style.scss";
+
+// If we need React Router
+import MapPage from "./containers/map-interactive";
+
+ReactDOM.render(<MapPage />, document.querySelector("#app"));
