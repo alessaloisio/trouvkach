@@ -54,7 +54,6 @@ export default () => {
     const handleViewportChange = useCallback(
         coords => {
             if (!mutexMapAnimation) {
-                console.log("test 3");
                 setPosition({
                     lat: coords.center[0],
                     lng: coords.center[1],

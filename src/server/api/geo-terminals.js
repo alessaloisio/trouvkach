@@ -12,8 +12,9 @@ export default async (req, res) => {
     const zoom = parseInt(req.params.zoom) || 13;
     const distance = distancePerPixel(latitude, zoom);
 
-    // Terminals
+    // Collections
     const Terminals = req.db.collection("terminals");
+    const Banks = req.db.collection("banks");
 
     // haversine’ formula
     // https://stackoverflow.com/a/365853
@@ -159,6 +160,15 @@ export default async (req, res) => {
         })
         .limit(100)
         .toArray();
+
+    await Promise.all(
+        terminals.map(async terminal => {
+            // eslint-disable-next-line require-atomic-updates
+            terminal.bank = await Banks.find({
+                _id: terminal.bank,
+            }).toArray();
+        }),
+    );
 
     // Send to client
     res.json({
