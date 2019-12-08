@@ -14,11 +14,12 @@ import "leaflet/dist/images/marker-shadow.png";
 export default props => {
     const {userPosition, position, onViewportChange, terminals} = props;
 
-    const createCustomIcon = L.divIcon({
-        html: `<span></span>`,
-        className: "marker-custom",
-        iconSize: L.point(30, 30, true),
-    });
+    const createCustomIcon = (color = "f0ffdd") =>
+        new L.divIcon({
+            html: `<span style="background-color: #${color};"></span>`,
+            className: "marker-custom",
+            iconSize: L.point(30, 30, true),
+        });
 
     const createClusterCustomIcon = cluster =>
         L.divIcon({
@@ -50,7 +51,7 @@ export default props => {
                     <Marker
                         key={value._id}
                         position={[value.latitude, value.longitude]}
-                        icon={createCustomIcon}
+                        icon={createCustomIcon()}
                     />
                 ))}
             </MarkerClusterGroup>
