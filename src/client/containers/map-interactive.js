@@ -12,7 +12,7 @@ export default () => {
         lng: 5.5995275,
     });
 
-    const [position] = useState({
+    const [position, setPosition] = useState({
         ...userPosition,
         zoom: 13,
     });
@@ -39,9 +39,12 @@ export default () => {
     /**
      * Get terminals from where we are
      */
-
-    const handleViewportChange = e => {
-        console.log(e);
+    const handleViewportChange = coords => {
+        setPosition({
+            lat: coords.center[0],
+            lng: coords.center[1],
+            zoom: coords.zoom,
+        });
     };
 
     return (
