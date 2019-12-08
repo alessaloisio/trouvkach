@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-// import axios from "axios";
+import axios from "axios";
 
 import Header from "../components/header";
 import SideBar from "../components/sidebar";
@@ -17,6 +17,8 @@ export default () => {
         ...userPosition,
         zoom: 13,
     });
+
+    const [terminals, setterminals] = useState([]);
 
     /**
      * Try to get the user position
@@ -50,7 +52,16 @@ export default () => {
 
     useEffect(() => {
         if (showMap) {
-            console.log("get terminals from api");
+            axios
+                .get(
+                    `/api/terminals/${position.lat},${position.lng},${position.zoom}`,
+                )
+                .then(response => {
+                    if (response.status === 200) {
+                        const res = response.data;
+                        setterminals(res.data);
+                    }
+                });
         }
     }, [showMap, position]);
 
@@ -64,6 +75,7 @@ export default () => {
                         userPosition={userPosition}
                         position={position}
                         onViewportChange={handleViewportChange}
+                        terminals={terminals}
                     />
                 ) : (
                     <React.Fragment />

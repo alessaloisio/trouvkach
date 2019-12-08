@@ -12,6 +12,9 @@ export default props => {
 
     return (
         <Map
+            animate={true}
+            minZoom={7}
+            maxZoom={17}
             center={position}
             zoom={position.zoom}
             onViewportChange={onViewportChange}>
