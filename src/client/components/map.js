@@ -1,6 +1,7 @@
 import React from "react";
 
 // Leaflet
+import L from "leaflet";
 import {Map, Marker, Popup, TileLayer} from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 
@@ -12,6 +13,19 @@ import "leaflet/dist/images/marker-shadow.png";
 
 export default props => {
     const {userPosition, position, onViewportChange, terminals} = props;
+
+    const createCustomIcon = L.divIcon({
+        html: `<span></span>`,
+        className: "marker-custom",
+        iconSize: L.point(30, 30, true),
+    });
+
+    const createClusterCustomIcon = cluster =>
+        L.divIcon({
+            html: `<span>${cluster.getChildCount()}</span>`,
+            className: "marker-cluster-custom",
+            iconSize: L.point(40, 40, true),
+        });
 
     return (
         <Map
@@ -31,11 +45,12 @@ export default props => {
             <Marker position={userPosition}>
                 <Popup>{"Your position"}</Popup>
             </Marker>
-            <MarkerClusterGroup>
+            <MarkerClusterGroup iconCreateFunction={createClusterCustomIcon}>
                 {terminals.map(value => (
                     <Marker
                         key={value._id}
                         position={[value.latitude, value.longitude]}
+                        icon={createCustomIcon}
                     />
                 ))}
             </MarkerClusterGroup>

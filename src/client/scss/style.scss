@@ -5,4 +5,28 @@ body {
 .leaflet-container {
     min-height: 600px;
     width: 100%;
+
+    .marker-custom span {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f0ffdd;
+        border-radius: 50%;
+        font-weight: bold;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .marker-cluster-custom span {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #fff;
+        border-radius: 50%;
+        font-weight: bold;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
 }

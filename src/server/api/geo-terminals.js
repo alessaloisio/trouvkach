@@ -1,7 +1,16 @@
+// https://wiki.openstreetmap.org/wiki/Zoom_levels
+const distancePerPixel = (latitude = 0, zoom = 0) => {
+    const C = Math.PI * 2 * 6378137;
+    const ranLatitude = (latitude * Math.PI) / 180;
+    const sPixel = (C * Math.cos(ranLatitude)) / Math.pow(2, zoom + 8);
+    return sPixel;
+};
+
 export default async (req, res) => {
     const longitude = parseFloat(req.params.longitude) || 50.6593305;
     const latitude = parseFloat(req.params.latitude) || 5.5995275;
-    const zoom = parseFloat(req.params.zoom) || 1;
+    const zoom = parseInt(req.params.zoom) || 13;
+    const distance = distancePerPixel(latitude, zoom);
 
     // Terminals
     const Terminals = req.db.collection("terminals");
@@ -141,13 +150,14 @@ export default async (req, res) => {
         },
         {
             $match: {
-                distance: {$lte: zoom},
+                distance: {$lte: distance},
             },
         },
     ])
         .sort({
             distance: 1,
         })
+        .limit(100)
         .toArray();
 
     // Send to client
