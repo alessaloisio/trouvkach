@@ -161,12 +161,13 @@ export default async (req, res) => {
         .limit(100)
         .toArray();
 
+    // Get banks
     await Promise.all(
         terminals.map(async terminal => {
             // eslint-disable-next-line require-atomic-updates
-            terminal.bank = await Banks.find({
+            terminal.bank = await Banks.findOne({
                 _id: terminal.bank,
-            }).toArray();
+            });
         }),
     );
 

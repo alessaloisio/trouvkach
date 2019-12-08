@@ -18,7 +18,7 @@ export default props => {
         onViewportClick,
     } = props;
 
-    const createCustomIcon = (color = "f0ffdd") =>
+    const createCustomIcon = color =>
         new L.divIcon({
             html: `<span style="background-color: #${color};"></span>`,
             className: "marker-custom",
@@ -57,7 +57,11 @@ export default props => {
                         onClick={onViewportClick}
                         key={value._id}
                         position={[value.latitude, value.longitude]}
-                        icon={createCustomIcon()} // dynamic value.color
+                        icon={createCustomIcon(
+                            value.bank && value.bank.color
+                                ? value.bank.color
+                                : "f0ffdd",
+                        )}
                     />
                 ))}
             </MarkerClusterGroup>
