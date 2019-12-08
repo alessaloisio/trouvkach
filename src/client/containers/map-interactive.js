@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import axios from "axios";
 
 import Header from "../components/header";
@@ -6,16 +6,18 @@ import SideBar from "../components/sidebar";
 import Map from "../components/map";
 
 export default () => {
-    const [showMap, setShowMap] = useState(false);
+    const [waitPermission, setWaitPermission] = useState(false);
+    const [mutexMapAnimation, setMutexMapAnimation] = useState(false);
 
     const [userPosition, setUserPosition] = useState({
-        lat: 50.6593305,
-        lng: 5.5995275,
+        lat: 50.6326188,
+        lng: 5.5854983,
     });
 
+    // Center map position
     const [position, setPosition] = useState({
         ...userPosition,
-        zoom: 13,
+        zoom: 17,
     });
 
     const [terminals, setterminals] = useState([]);
@@ -30,11 +32,18 @@ export default () => {
                     lat: pos.coords.latitude,
                     lng: pos.coords.longitude,
                 });
-                setShowMap(true);
+
+                setPosition(prev => ({
+                    ...prev,
+                    lat: pos.coords.latitude,
+                    lng: pos.coords.longitude,
+                }));
+
+                setWaitPermission(true);
             },
             () => {
                 // (User denied Geolocation)
-                setShowMap(true);
+                setWaitPermission(true);
             },
         );
     }, []);
@@ -42,16 +51,22 @@ export default () => {
     /**
      * Get terminals from where we are
      */
-    const handleViewportChange = coords => {
-        setPosition({
-            lat: coords.center[0],
-            lng: coords.center[1],
-            zoom: coords.zoom,
-        });
-    };
+    const handleViewportChange = useCallback(
+        coords => {
+            if (!mutexMapAnimation) {
+                console.log("test 3");
+                setPosition({
+                    lat: coords.center[0],
+                    lng: coords.center[1],
+                    zoom: coords.zoom,
+                });
+            }
+        },
+        [position, mutexMapAnimation],
+    );
 
     useEffect(() => {
-        if (showMap) {
+        if (waitPermission) {
             axios
                 .get(
                     `/api/terminals/${position.lat},${position.lng},${position.zoom}`,
@@ -63,19 +78,47 @@ export default () => {
                     }
                 });
         }
-    }, [showMap, position]);
+    }, [waitPermission, position]);
+
+    /**
+     * Map interaction
+     */
+
+    const delayMapAnimation = (time = 1000) => {
+        if (!mutexMapAnimation) {
+            setTimeout(() => {
+                setMutexMapAnimation(false);
+            }, time);
+        }
+    };
+
+    const handleViewportClick = useCallback(
+        coords => {
+            if (!mutexMapAnimation) {
+                setMutexMapAnimation(true);
+                delayMapAnimation(500);
+                setPosition(prev => ({
+                    ...prev,
+                    lat: coords.latlng.lat,
+                    lng: coords.latlng.lng,
+                }));
+            }
+        },
+        [position, mutexMapAnimation],
+    );
 
     return (
         <React.Fragment>
             <Header />
             <div className={"content"}>
                 <SideBar />
-                {showMap ? (
+                {waitPermission ? (
                     <Map
                         userPosition={userPosition}
                         position={position}
                         onViewportChange={handleViewportChange}
                         terminals={terminals}
+                        onViewportClick={handleViewportClick}
                     />
                 ) : (
                     <React.Fragment />

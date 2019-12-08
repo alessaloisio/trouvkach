@@ -9,10 +9,14 @@ import "leaflet/dist/leaflet.css";
 import "react-leaflet-markercluster/dist/styles.min.css";
 import "leaflet/dist/images/marker-shadow.png";
 
-// https://react-leaflet.js.org/docs/en/components#mapcomponent
-
 export default props => {
-    const {userPosition, position, onViewportChange, terminals} = props;
+    const {
+        userPosition,
+        position,
+        onViewportChange,
+        terminals,
+        onViewportClick,
+    } = props;
 
     const createCustomIcon = (color = "f0ffdd") =>
         new L.divIcon({
@@ -31,6 +35,7 @@ export default props => {
     return (
         <Map
             className={"markercluster-map"}
+            onClick={onViewportClick}
             animate={true}
             minZoom={7}
             maxZoom={17}
@@ -49,9 +54,10 @@ export default props => {
             <MarkerClusterGroup iconCreateFunction={createClusterCustomIcon}>
                 {terminals.map(value => (
                     <Marker
+                        onClick={onViewportClick}
                         key={value._id}
                         position={[value.latitude, value.longitude]}
-                        icon={createCustomIcon()}
+                        icon={createCustomIcon()} // dynamic value.color
                     />
                 ))}
             </MarkerClusterGroup>

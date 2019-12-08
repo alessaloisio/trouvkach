@@ -7,8 +7,8 @@ const distancePerPixel = (latitude = 0, zoom = 0) => {
 };
 
 export default async (req, res) => {
-    const longitude = parseFloat(req.params.longitude) || 50.6593305;
-    const latitude = parseFloat(req.params.latitude) || 5.5995275;
+    const longitude = parseFloat(req.params.longitude) || 50.6326188;
+    const latitude = parseFloat(req.params.latitude) || 5.5854983;
     const zoom = parseInt(req.params.zoom) || 13;
     const distance = distancePerPixel(latitude, zoom);
 
