@@ -7,7 +7,9 @@ import MarkerClusterGroup from "react-leaflet-markercluster";
 
 import "leaflet/dist/leaflet.css";
 import "react-leaflet-markercluster/dist/styles.min.css";
+
 import "leaflet/dist/images/marker-shadow.png";
+import "leaflet/dist/images/marker-icon-2x.png";
 
 export default props => {
     const {
@@ -38,7 +40,7 @@ export default props => {
             onClick={onViewportClick}
             animate={true}
             minZoom={7}
-            maxZoom={16}
+            maxZoom={17}
             center={position}
             zoom={position.zoom}
             onViewportChange={onViewportChange}>
