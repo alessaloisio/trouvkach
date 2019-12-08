@@ -5,6 +5,8 @@ import {Map, Marker, Popup, TileLayer} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet/dist/images/marker-shadow.png";
 
+// https://react-leaflet.js.org/docs/en/components#mapcomponent
+
 export default props => {
     const {userPosition, position, onViewportChange} = props;
 

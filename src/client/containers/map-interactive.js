@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from "react";
+// import axios from "axios";
 
 import Header from "../components/header";
 import SideBar from "../components/sidebar";
 import Map from "../components/map";
 
 export default () => {
-    const [mapData, setMapData] = useState(false);
+    const [showMap, setShowMap] = useState(false);
 
     const [userPosition, setUserPosition] = useState({
         lat: 50.6593305,
@@ -27,11 +28,11 @@ export default () => {
                     lat: pos.coords.latitude,
                     lng: pos.coords.longitude,
                 });
-                setMapData(true);
+                setShowMap(true);
             },
             () => {
                 // (User denied Geolocation)
-                setMapData(true);
+                setShowMap(true);
             },
         );
     }, []);
@@ -47,12 +48,18 @@ export default () => {
         });
     };
 
+    useEffect(() => {
+        if (showMap) {
+            console.log("get terminals from api");
+        }
+    }, [showMap, position]);
+
     return (
         <React.Fragment>
             <Header />
             <div className={"content"}>
                 <SideBar />
-                {mapData ? (
+                {showMap ? (
                     <Map
                         userPosition={userPosition}
                         position={position}
