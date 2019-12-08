@@ -67,17 +67,6 @@ module.exports = env => {
         module: {
             rules: [
                 {
-                    test: /\.(png|jpg|gif)$/,
-                    use: [
-                        {
-                            loader: "file-loader",
-                            options: {
-                                name: "[path][name].[ext]",
-                            },
-                        },
-                    ],
-                },
-                {
                     test: /\.js$/,
                     exclude: [/node_modules/],
                     use: [
@@ -119,6 +108,18 @@ module.exports = env => {
                         },
                         {
                             loader: "sass-loader",
+                        },
+                    ],
+                },
+                {
+                    test: /\.(png|jpe?g|gif|svg)$/,
+                    use: [
+                        {
+                            loader: "file-loader",
+                            options: {
+                                outputPath: "/images",
+                                name: "[name].[ext]",
+                            },
                         },
                     ],
                 },
