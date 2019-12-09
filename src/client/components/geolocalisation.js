@@ -11,7 +11,9 @@ function WatchID() {
     useEffect(() => {
         navigator.geolocation.watchPosition(pos => {
             setPosition(pos.coords);
-            /*     console.log(pos.coords.latitude, pos.coords.longitude); */
+
+            /*axios get http://localhost/api/terminals/10-20 $
+              console.log(pos.coords.latitude, pos.coords.longitude); */
         });
     }, []);
 
@@ -23,5 +25,4 @@ function WatchID() {
     );
 }
 
-// let Localisation = watchID();
 export default WatchID;
