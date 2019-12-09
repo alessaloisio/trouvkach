@@ -1,0 +1,58 @@
+#app {
+    .content {
+        .sidebar {
+            background: #fff;
+            .sidebar-list {
+                list-style: none;
+                padding: 0;
+                .sidebar-item {
+                    padding: 1em;
+                    cursor: pointer;
+                    transition: background-color 0.5s linear;
+
+                    &:hover {
+                        background-color: #f3f3f3;
+                    }
+
+                    .item-container {
+                        display: flex;
+
+                        .item-logo {
+                            width: 50px;
+                            box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+                            height: 50px;
+                            border-radius: 50%;
+                            align-self: center;
+                            margin-right: 2em;
+                        }
+
+                        .item-content {
+                            p {
+                                margin: 0.75em;
+                            }
+                            .item-title {
+                                font-weight: bold;
+                            }
+                            .item-description {
+                                color: #5a5a5a;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Tablet / Desktop
+@media screen and (min-width: 1000px) {
+    #app {
+        .content {
+            .sidebar {
+                flex: 1 0 25%;
+                border-right: 1px solid #c5c5c5;
+                border-bottom: none;
+            }
+        }
+    }
+}

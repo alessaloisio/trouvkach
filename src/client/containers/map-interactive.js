@@ -110,7 +110,10 @@ export default () => {
         <React.Fragment>
             <Header terminals={terminals} />
             <div className={"content"}>
-                <SideBar terminals={terminals} />
+                <SideBar
+                    terminals={terminals}
+                    onViewportClick={handleViewportClick}
+                />
                 {waitPermission ? (
                     <Map
                         userPosition={userPosition}
