@@ -9,10 +9,14 @@
 import * as React from "react";
 import ReactDOM from "react-dom";
 import Localisation from "./components/geolocalisation";
+import Mapgeo from "./components/map";
+
 /* ReactDOM.render(<HelloWorld />, document.querySelector("#app")); */
 ReactDOM.render(
     <div>
         <Localisation />
+
+        <Mapgeo />
     </div>,
     document.querySelector("#app"),
 );
