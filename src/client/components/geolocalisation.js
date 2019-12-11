@@ -10,6 +10,7 @@ function WatchID() {
 
     useEffect(() => {
         navigator.geolocation.watchPosition(pos => {
+            console.log("pos.coords", pos.coords);
             setPosition(pos.coords);
 
             /*axios get http://localhost/api/terminals/10-20 $
