@@ -12,7 +12,6 @@ import express from "express";
 import database from "./database";
 import apiRoutes from "./api/router";
 
-const {APP_PORT} = process.env;
 const app = express();
 
 // Send client static files (React App)
@@ -25,7 +24,7 @@ app.use(database);
 app.use("/api", apiRoutes);
 
 // Start Server
-app.listen(APP_PORT, () =>
+app.listen(process.env.PORT, () =>
     // eslint-disable-next-line no-console
-    console.log(`🚀 Server is listening on port ${APP_PORT}.`),
+    console.log(`🚀 Server is listening on port ${process.env.PORT}.`),
 );
