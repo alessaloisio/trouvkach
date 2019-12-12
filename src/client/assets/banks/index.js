@@ -1,0 +1,14 @@
+import "./argenta.png";
+import "./axa.png";
+import "./belfius.png";
+import "./beobank.png";
+import "./bkcp.png";
+import "./bnp.png";
+import "./bpost.png";
+import "./cbc.png";
+import "./crelan.png";
+import "./deltalloyd.png";
+import "./deutschebank.png";
+import "./ing.png";
+import "./kbc.png";
+import "./keytrade.png";

@@ -1,4 +1,8 @@
 import React from "react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faGlobeEurope} from "@fortawesome/free-solid-svg-icons";
+
+import "../assets/banks";
 
 export default props => {
     const {terminals, onViewportClick} = props;
@@ -28,7 +32,7 @@ export default props => {
                         }}>
                         <div className={"item-container"}>
                             <div className={"item-logo"}>
-                                <img href={`/images/${terminal.bank.icon}`} />
+                                <img src={`/images/${terminal.bank.icon}`} />
                             </div>
                             <div className={"item-content"}>
                                 <p className={"item-title"}>
@@ -40,7 +44,11 @@ export default props => {
                             </div>
                             <div className={"item-actions"}>
                                 <a href={terminal.bank.url}>
-                                    <i />
+                                    <FontAwesomeIcon
+                                        icon={faGlobeEurope}
+                                        size={"lg"}
+                                        color={"#333"}
+                                    />
                                 </a>
                             </div>
                         </div>
