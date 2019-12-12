@@ -49,6 +49,15 @@ export default () => {
     }, []);
 
     /**
+     * Search Box
+     */
+    const [searchInput, setSearchInput] = useState("");
+
+    const handleSearchInput = e => {
+        setSearchInput(e.target.value);
+    };
+
+    /**
      * Get terminals from where we are
      */
     const handleViewportChange = useCallback(
@@ -68,7 +77,7 @@ export default () => {
         if (waitPermission) {
             axios
                 .get(
-                    `/api/terminals/${position.lat},${position.lng},${position.zoom}`,
+                    `/api/terminals/${position.lat},${position.lng},${position.zoom}/${searchInput}`,
                 )
                 .then(response => {
                     if (response.status === 200) {
@@ -77,7 +86,7 @@ export default () => {
                     }
                 });
         }
-    }, [waitPermission, position]);
+    }, [waitPermission, position, searchInput]);
 
     /**
      * Map interaction
@@ -108,7 +117,10 @@ export default () => {
 
     return (
         <React.Fragment>
-            <Header terminals={terminals} />
+            <Header
+                searchInput={searchInput}
+                handleSearchInput={handleSearchInput}
+            />
             <div className={"content"}>
                 <SideBar
                     terminals={terminals}

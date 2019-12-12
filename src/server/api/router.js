@@ -14,6 +14,6 @@ router.get("/", (_req, res) => {
 
 router.use("/banks", banks);
 
-router.get("/terminals/:latitude,:longitude,:zoom", geoTerminals);
+router.get("/terminals/:latitude,:longitude,:zoom/:search*?", geoTerminals);
 
 export default router;

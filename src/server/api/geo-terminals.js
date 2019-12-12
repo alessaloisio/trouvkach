@@ -11,10 +11,12 @@ export default async (req, res) => {
     const latitude = parseFloat(req.params.latitude) || 5.5854983;
     const zoom = parseInt(req.params.zoom) || 13;
     const distance = distancePerPixel(latitude, zoom);
+    const search = req.params.search
+        ? new RegExp(`^${req.params.search}`, "i")
+        : new RegExp(`.*`, "i");
 
     // Collections
     const Terminals = req.db.collection("terminals");
-    const Banks = req.db.collection("banks");
 
     // haversine’ formula
     // https://stackoverflow.com/a/365853
@@ -136,8 +138,16 @@ export default async (req, res) => {
             },
         },
         {
+            $lookup: {
+                from: "banks",
+                localField: "bank",
+                foreignField: "_id",
+                as: "bank",
+            },
+        },
+        {
             $project: {
-                bank: 1,
+                bank: {$arrayElemAt: ["$bank", 0]},
                 address: 1,
                 longitude: 1,
                 latitude: 1,
@@ -156,24 +166,17 @@ export default async (req, res) => {
                     $exists: true,
                     $ne: null,
                 },
+                "bank.name": {
+                    $in: [search],
+                },
             },
         },
     ])
         .sort({
             distance: 1,
         })
-        .limit(100)
+        .limit(20)
         .toArray();
-
-    // Get banks
-    await Promise.all(
-        terminals.map(async terminal => {
-            // eslint-disable-next-line require-atomic-updates
-            terminal.bank = await Banks.findOne({
-                _id: terminal.bank,
-            });
-        }),
-    );
 
     // Send to client
     res.json({

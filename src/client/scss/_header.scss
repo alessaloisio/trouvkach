@@ -3,5 +3,31 @@
         background: #fff;
         border-bottom: 1px solid #c5c5c5;
         z-index: 401;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        .search-box {
+            margin: 1em;
+            position: relative;
+
+            svg {
+                position: absolute;
+                left: 0.5em;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            input {
+                border: 1px solid #afafaf;
+                padding: 0.5em 0.5em 0.5em 2em;
+                border-radius: 10px;
+
+                &:focus {
+                    outline: 0;
+                }
+            }
+        }
     }
 }
