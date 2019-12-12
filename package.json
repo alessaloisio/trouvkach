@@ -13,7 +13,8 @@
     "work:server": "npx babel src/server -s --watch --verbose --out-dir bin/server",
     "build:client": "npx webpack --progress --profile --colors",
     "work:client": "npx webpack --env=dev --progress",
-    "build": "npm run build:server && npm run build:client"
+    "build": "npm run build:server && npm run build:client",
+    "start": "node bin/server/index.js"
   },
   "lint-staged": {
     "*.js": [
