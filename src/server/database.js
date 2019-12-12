@@ -18,9 +18,8 @@ const database = (req, _res, next) => {
         next();
         return;
     }
-
     // First Connection to db
-    const url = process.env.URL || "mongodb://dev:dev@mongo:27017";
+    const url = process.env.MONGODB_URI || "mongodb://dev:dev@mongo:27017";
     const dbName = process.env.DBNAME || "trouvkash";
 
     MongoClient.connect(url, {useUnifiedTopology: true}, (err, client) => {
