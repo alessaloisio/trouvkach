@@ -22,14 +22,18 @@ const database = (req, _res, next) => {
     const url = process.env.MONGODB_URI || "mongodb://dev:dev@mongo:27017";
     const dbName = process.env.DBNAME || "trouvkash";
 
-    MongoClient.connect(url, {useUnifiedTopology: true}, (err, client) => {
-        assert.equal(null, err);
+    MongoClient.connect(
+        url,
+        {useUnifiedTopology: true, useNewUrlParser: true},
+        (err, client) => {
+            assert.equal(null, err);
 
-        db = client.db(dbName);
-        req.db = client.db(dbName);
+            db = client.db(dbName);
+            req.db = client.db(dbName);
 
-        next();
-    });
+            next();
+        },
+    );
 };
 
 export default database;
