@@ -65,7 +65,7 @@ app.get("/api/banks", async (req, res) => {
         });
     });
 });
-/*
+
 app.get("/api/terminals", async (req, res) => {
     console.log(`ℹ️  (${req.method.toUpperCase()}) ${req.url}`);
 
@@ -80,8 +80,8 @@ app.get("/api/terminals", async (req, res) => {
             data: docs,
         });
     });
-}); */
-
+});
+/*
 app.get("/api/terminals/:longitude-:latitude", async (req, res) => {
     console.log(`ℹ️  (${req.method.toUpperCase()}) ${req.url}`);
 
@@ -114,7 +114,7 @@ app.get("/api/terminals/:longitude-:latitude", async (req, res) => {
     ]).toArray();
 
     console.log("Wesh les thunes ", terminaux);
-});
+}); */
 
 /* navigator.geolocation.watchPosition(pos => {
     console.log(pos.coords.latitude , pos.coords.longitude)}) */

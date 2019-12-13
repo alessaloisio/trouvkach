@@ -10,6 +10,7 @@ import * as React from "react";
 import ReactDOM from "react-dom";
 import Localisation from "./components/geolocalisation";
 import Mapgeo from "./components/map";
+import RenderTerminals from "./components/terminal";
 
 /* ReactDOM.render(<HelloWorld />, document.querySelector("#app")); */
 ReactDOM.render(
@@ -17,6 +18,8 @@ ReactDOM.render(
         <Localisation />
 
         <Mapgeo />
+
+        <RenderTerminals />
     </div>,
     document.querySelector("#app"),
 );
